@@ -1,6 +1,7 @@
 name: Purge GitHub's CDN cache
 
 on:
+  repository_dispatch:
   workflow_dispatch:
   schedule:
       # every 2 minutes (times out after 5 minutes, should always have at least 2 jobs running)
