@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   schedule:
       # every 2 minutes (times out after 5 minutes, should always have at least 2 jobs running)
-    - cron: "*/2 * * * *"
+    - cron: '0/2 * * * *'
 
 jobs:
   run:
