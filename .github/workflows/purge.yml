@@ -4,14 +4,14 @@ on:
   repository_dispatch:
   workflow_dispatch:
   schedule:
-      # every 2 minutes (times out after 5 minutes, should always have at least 2 jobs running)
-    - cron: '0/2 * * * *'
+      # restart job 1 minute after it dies (can't do sooner)
+      # as of writing, the default timeout is 6 hours, while means
+      # 99.72% uptime
+    - cron: '* * * * *'
 
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
-
     steps:
       - name: Purge image until we get time out 
         run: |
