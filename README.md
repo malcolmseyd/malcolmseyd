@@ -1,1 +1,1 @@
-![](https://github-live.malcolmseyd.workers.dev/?)
+![](https://github-live.malcolmseyd.workers.dev/)
