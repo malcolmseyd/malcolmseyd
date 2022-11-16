@@ -1,0 +1,20 @@
+name: Purge GitHub's CDN cache
+
+on:
+  schedule:
+      # every 2 minutes (times out after 5 minutes, should always have at least 2 jobs running)
+    - cron: */2 * * * *
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Purge image until we get time out 
+        run: |
+          URL=$(curl https://github.com/malcolmseyd/malcolmseyd/blob/main/README.md 2>/dev/null | grep -o '[^"]*camo[^"]*' | uniq)
+          while true; do
+            curl -X PURGE $URL;
+            sleep 1;
+          done
