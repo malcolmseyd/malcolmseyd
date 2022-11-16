@@ -16,6 +16,6 @@ jobs:
         run: |
           URL=$(curl https://github.com/malcolmseyd/malcolmseyd/blob/main/README.md 2>/dev/null | grep -o '[^"]*camo[^"]*' | uniq)
           while true; do
-            curl -X PURGE $URL;
+            curl -w "\n" -s -X PURGE $URL;
             sleep 1;
           done
