@@ -1,9 +1,6 @@
 name: Purge GitHub's CDN cache
 
 on:
-  push:
-    branches:
-      - 'main'
   workflow_dispatch:
   schedule:
       # restart job 1 minute after it dies (can't do sooner)
