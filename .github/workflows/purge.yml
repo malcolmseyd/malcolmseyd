@@ -3,19 +3,22 @@ name: Purge GitHub's CDN cache
 on:
   workflow_dispatch:
   schedule:
-      # restart job 1 minute after it dies (can't do sooner)
-      # as of writing, the default timeout is 6 hours, while means
-      # 99.72% uptime
+      # start jobs as quickly as possible 
+      # usually this ends up being about 15 mins, although i have no control
+      # given 1hr uptime, this mean usually 4 run concurrently
     - cron: '* * * * *'
 
 jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - name: Purge image until we get time out 
+      - name: Purge image until we get time out
         run: |
-          URL=$(curl https://github.com/malcolmseyd/malcolmseyd/blob/main/README.md 2>/dev/null | grep -o '[^"]*camo[^"]*' | uniq)
-          COUNT=3600 # 1 hour @ about 1 per second
+          URL=$(curl -s https://github.com/malcolmseyd/malcolmseyd/blob/main/README.md | grep -o '[^"]*camo[^"]*' | uniq)
+
+          # 1 hour @ about 1 per second
+          # workers timeout is 6hrs so this should be plenty
+          COUNT=3600 
           for i in $(seq $COUNT); do
             echo "making request $i/$COUNT";
             curl -w "\n" -s -X PURGE $URL;
