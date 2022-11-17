@@ -15,7 +15,9 @@ jobs:
       - name: Purge image until we get time out 
         run: |
           URL=$(curl https://github.com/malcolmseyd/malcolmseyd/blob/main/README.md 2>/dev/null | grep -o '[^"]*camo[^"]*' | uniq)
-          while true; do
+          COUNT=3600 # 1 hour @ about 1 per second
+          for i in $(seq $COUNT); do
+            echo "making request $i/$COUNT";
             curl -w "\n" -s -X PURGE $URL;
             sleep 1;
-          done
+          done | ts '[%Y-%m-%d %H:%M:%.S]'
