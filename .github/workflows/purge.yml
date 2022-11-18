@@ -5,7 +5,7 @@ on:
   schedule:
       # start jobs as quickly as possible 
       # usually this ends up being about 15 mins, although i have no control
-      # given 1hr uptime, this mean usually 4 run concurrently
+
     - cron: '* * * * *'
 
 jobs:
@@ -16,9 +16,9 @@ jobs:
         run: |
           URL=$(curl -s https://github.com/malcolmseyd/malcolmseyd/blob/main/README.md | grep -o '[^"]*camo[^"]*' | uniq)
 
-          # 1 hour @ about 1 per second
+          # 3 hours @ about 1 per second
           # workers timeout is 6hrs so this should be plenty
-          COUNT=3600 
+          COUNT=$((60*60*3))
           for i in $(seq $COUNT); do
             echo "making request $i/$COUNT";
             curl -w "\n" -s -X PURGE $URL;
