@@ -21,6 +21,6 @@ jobs:
           COUNT=$((60*60*3))
           for i in $(seq $COUNT); do
             echo "making request $i/$COUNT";
-            curl -w "\n" -s -X PURGE $URL;
+            curl -w "\n" -s -X PURGE $URL || true;
             sleep 1;
           done
