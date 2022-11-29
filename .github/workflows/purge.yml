@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Purge image until we get time out
         run: |
-          URL=$(curl -s https://github.com/malcolmseyd/malcolmseyd/blob/main/README.md | grep -o '[^"]*camo[^"]*' | uniq)
+          URL=$(curl -s https://github.com/malcolmseyd/malcolmseyd/blob/main/README.md | grep -o 'alt="cat".*[^"]*camo[^"]*"' | grep -o '[^"]*camo[^"]*')
 
           # 3 hours @ about 1 per second
           # workers timeout is 6hrs so this should be plenty
