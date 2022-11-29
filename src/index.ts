@@ -1,9 +1,15 @@
 const catURLBase = "https://cataas.com/cat/says/";
-const msg = "Welcome to my github profile!\nRefresh the page to see a new cat!";
+const msg = [
+  "♪♪♪ (=^•_•^=)_∫",
+  "Welcome to my profile!",
+  "I've busted GitHub's cat-che,",
+  "refresh the page to see a new cat!",
+].join("\n");
 const catURL = catURLBase + encodeURIComponent(msg);
 
 export default {
   async fetch(request: Request): Promise<Response> {
+    console.log(catURL);
     // local dev noise
     if (request.url.endsWith("favicon.ico")) {
       return new Response(null, { status: 404 });
