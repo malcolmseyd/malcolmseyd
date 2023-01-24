@@ -2,8 +2,8 @@ const catURLBase = "https://cataas.com/cat/says/";
 const msg = [
   "♪♪♪ (=^•_•^=)_∫",
   "Welcome to my profile!",
-  "I've busted GitHub's cat-che,",
-  "refresh the page to see a new cat!",
+  //"I've busted GitHub's cat-che,",
+  //"refresh the page to see a new cat!",
 ].join("\n");
 const catURL = catURLBase + encodeURIComponent(msg);
 
