@@ -1,14 +1,24 @@
+import { connect } from "cloudflare:sockets";
+
 const catURLBase = "https://cataas.com/cat/says/";
 const msg = [
   "♪♪♪ (=^•_•^=)_∫",
   "Welcome to my profile!",
-  //"I've busted GitHub's cat-che,",
-  //"refresh the page to see a new cat!",
+  "I've busted GitHub's cat-che,",
+  "refresh the page to see a new cat!",
 ].join("\n");
 const catURL = catURLBase + encodeURIComponent(msg);
 
 export default {
   async fetch(request: Request): Promise<Response> {
+    const selfURL = await getSelfURL();
+    if (!selfURL) {
+      console.error("Failed to get self URL from README");
+      return new Response(null, { status: 500 });
+    }
+
+    tcpPurge(selfURL);
+
     console.log(catURL);
     // local dev noise
     if (request.url.endsWith("favicon.ico")) {
@@ -24,3 +34,40 @@ export default {
     return newResp;
   },
 };
+
+async function getSelfURL() {
+  const resp = await fetch(
+    "https://github.com/malcolmseyd/malcolmseyd/blob/main/README.md"
+  );
+  const text = await resp.text();
+  const matches = text.match(
+    /<img[^>]+alt="cat"[^>]+ src="(https:\/\/camo[^"]*)"[^>]*>/
+  );
+  return matches?.[1];
+}
+
+async function tcpPurge(url: string) {
+  const socket = connect(
+    {
+      hostname: "camo.githubusercontent.com",
+      port: 443,
+    },
+    { secureTransport: "on", allowHalfOpen: false }
+  );
+  const writer: WritableStreamDefaultWriter = socket.writable.getWriter();
+  const reader: ReadableStreamDefaultReader = socket.readable.getReader();
+
+  console.log("Purging", url);
+
+  await writer.write(
+    new TextEncoder().encode(
+      `PURGE ${url} HTTP/1.1\r\nHost: camo.githubusercontent.com\r\n\r\n`
+    )
+  );
+
+  const { value } = await reader.read();
+  const response = new TextDecoder().decode(value);
+  console.log(response);
+
+  socket.close();
+}
