@@ -1,5 +1,8 @@
 <div align="center">
   <img align="center" alt="cat" height="400" src="https://github-live.malcolmseyd.workers.dev/"/>
+  <div align="center">
+    New and improved! [No longer violates GitHub ToS](docs/history.md)!
+  </div>
 </div>
 
 <div align="center">
