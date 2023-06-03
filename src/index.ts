@@ -10,15 +10,11 @@ const msg = [
 const catURL = catURLBase + encodeURIComponent(msg);
 
 export default {
-  async fetch(request: Request): Promise<Response> {
-    const selfURL = await getSelfURL();
-    if (!selfURL) {
-      console.error("Failed to get self URL from README");
-      return new Response(null, { status: 500 });
-    }
-
-    tcpPurge(selfURL);
-
+  async fetch(
+    request: Request,
+    env: unknown,
+    context: { waitUntil: (p: Promise<unknown>) => void }
+  ): Promise<Response> {
     console.log(catURL);
     // local dev noise
     if (request.url.endsWith("favicon.ico")) {
@@ -31,9 +27,25 @@ export default {
     // don't cache
     newResp.headers.set("Cache-Control", "no-cache");
 
+    // delete self from cache
+    context.waitUntil(purgeSelf());
+
     return newResp;
   },
 };
+
+async function purgeSelf() {
+  const selfURL = await getSelfURL();
+
+  // wait a bit so the response is probably cached
+  await new Promise((resolve) => setTimeout(resolve, 200));
+
+  if (selfURL) {
+    await tcpPurge(selfURL);
+  } else {
+    console.error("No self URL found in README.md");
+  }
+}
 
 async function getSelfURL() {
   const resp = await fetch(
