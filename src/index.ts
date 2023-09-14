@@ -49,9 +49,11 @@ async function purgeSelf() {
 
 async function getSelfURL() {
   const resp = await fetch(
-    "https://github.com/malcolmseyd/malcolmseyd/blob/main/README.md"
+    "https://github.com/malcolmseyd/malcolmseyd/blob/main/README.md",
+    { headers: { Accept: "application/json" } }
   );
-  const text = await resp.text();
+  const json = await resp.json();
+  const text = (json as any).payload.blob.richText as string;
   const matches = text.match(
     /<img[^>]+alt="cat"[^>]+ src="(https:\/\/camo[^"]*)"[^>]*>/
   );
